@@ -6,7 +6,7 @@ Make **pull-requests** if you want improve this script!
 **Preview:** https://streamable.com/dvsw4w
 
 **My Discord Server:** https://discord.gg/XTpGvYeNxg
-*I suggest joining as I am going to announce there any other new scripts that I am working on!**
+*I suggest joining as I am going to announce there any other new scripts that I am working on!*
 
 # 
 **LICENSE**
