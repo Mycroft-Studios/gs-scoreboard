@@ -1,6 +1,8 @@
 # gs-scoreboard
 Beautiful and low resource usage scoreboard made for ESX Framework with player ped preview and player info and keyboard binds showcase!
 
+Also you can sort the columns in alphabetical order or in numerical order.
+
 Make **pull-requests** if you want improve this script!
 
 **Preview:** https://streamable.com/dvsw4w
