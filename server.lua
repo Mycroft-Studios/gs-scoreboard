@@ -33,7 +33,7 @@ end)
 
 RegisterCommand("refreshscoreboard", function()
     RefreshScoreboard()
-end, true)
+end, false)
 
 RegisterServerEvent("gs-scoreboard:updateValues")
 AddEventHandler(
@@ -67,7 +67,6 @@ AddEventHandler(
     end
 )
 
-RegisterNetEvent('esx:playerLoaded')
 AddEventHandler(
     'esx:playerLoaded',  
     function()
@@ -75,11 +74,18 @@ AddEventHandler(
     end
 )
 
-AddEventHandler('esx:playerDropped', 
+AddEventHandler(
+    'playerDropped', 
     function()
         RefreshScoreboard()
     end
 )
+
+AddEventHandler('playerDropped', function (reason)
+    Citizen.Wait(500)
+    RefreshScoreboard()
+end)
+  
 
 function getOnlinePlayers()
     local xPlayers = ESX.GetExtendedPlayers()
