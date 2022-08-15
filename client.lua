@@ -1,7 +1,4 @@
-local onlinePlayers
-local onlineStaff
-local onlinePolice
-local onlineEMS
+
 local isScoreboardOpen = false
 local requestedData
 
@@ -13,7 +10,7 @@ Citizen.CreateThread(function()
 end)
 
 local PlayerPedPreview
-function createPedScreen(playerID) 
+function createPedScreen(playerID)
     CreateThread(function()
         ActivateFrontendMenu(GetHashKey("FE_MENU_VERSION_JOINING_SCREEN"), true, -1)
         Citizen.Wait(100)
@@ -29,6 +26,7 @@ function createPedScreen(playerID)
         GivePedToPauseMenu(PlayerPedPreview, 2)
         SetPauseMenuPedLighting(true)
         SetPauseMenuPedSleepState(true)
+        TriggerServerEvent('gs-scoreboard:requestUserData', tonumber(GetPlayerServerId(PlayerId())))
     end)
 end
 
@@ -112,7 +110,6 @@ AddEventHandler(
 
 RegisterNUICallback('showPlayerPed', function(data)
     local playerID = data.playerID
-    local playerName = data.playerName
     DeleteEntity(PlayerPedPreview)
     Citizen.Wait(100)
     local playerTargetID = GetPlayerPed(GetPlayerFromServerId(playerID))
