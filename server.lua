@@ -29,6 +29,7 @@ AddEventHandler('onResourceStart', function(resource)
         Citizen.Wait(1000)
         RefreshScoreboard()
     end
+    TriggerClientEvent("gs-scoreboard:sendConfigToNUI", -1)
 end)
 
 RegisterCommand("refreshscoreboard", function()

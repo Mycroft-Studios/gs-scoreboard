@@ -26,33 +26,41 @@ function createPedScreen(playerID)
         GivePedToPauseMenu(PlayerPedPreview, 2)
         SetPauseMenuPedLighting(true)
         SetPauseMenuPedSleepState(true)
-        TriggerServerEvent('gs-scoreboard:requestUserData', tonumber(GetPlayerServerId(PlayerId())))
     end)
 end
 
 RegisterCommand('showscoreboard', function()
     if not isScoreboardOpen then
-        SetFrontendActive(true)
-        createPedScreen(PlayerPedId())
+        TriggerServerEvent('gs-scoreboard:requestUserData', tonumber(GetPlayerServerId(PlayerId())))
+        if Config.showPlayerPed then
+            SetFrontendActive(true)
+            createPedScreen(PlayerPedId())
+        end
         SendNUIMessage({
             action = "show"
         })
         SetNuiFocus(true,true)
-        TriggerScreenblurFadeIn(500)
+        if Config.screenBlur then
+            TriggerScreenblurFadeIn(Config.screenBlurAnimationDuration)
+        end
         isScoreboardOpen = true
     end
 end, false)
 
 RegisterCommand('closescoreboard', function()
     if isScoreboardOpen then
-        DeleteEntity(PlayerPedPreview)
-        SetFrontendActive(false)
+        if Config.showPlayerPed then
+            DeleteEntity(PlayerPedPreview)
+            SetFrontendActive(false)
+        end
         SendNUIMessage({
             action = "hide"
         })
         SetNuiFocus(false,false)
         isScoreboardOpen = false
-        TriggerScreenblurFadeOut(500)
+        if Config.screenBlur then
+            TriggerScreenblurFadeOut(Config.screenBlurAnimationDuration)
+        end
     end
 end, false)
 
@@ -75,6 +83,16 @@ AddEventHandler(
                 playerGroup = playerGroup,
             }
         )
+    end
+)
+
+RegisterNetEvent("gs-scoreboard:sendConfigToNUI")
+AddEventHandler("gs-scoreboard:sendConfigToNUI",
+    function()
+        SendNUIMessage({
+            action = "getConfig",
+            config = json.encode(Config),
+        })
     end
 )
 
@@ -109,22 +127,24 @@ AddEventHandler(
 )
 
 RegisterNUICallback('showPlayerPed', function(data)
-    local playerID = data.playerID
-    DeleteEntity(PlayerPedPreview)
-    Citizen.Wait(100)
-    local playerTargetID = GetPlayerPed(GetPlayerFromServerId(playerID))
-    PlayerPedPreview = ClonePed(playerTargetID, GetEntityHeading(playerTargetID), true, false)
-    local x,y,z = table.unpack(GetEntityCoords(PlayerPedPreview))
-    SetEntityCoords(PlayerPedPreview, x,y,z-10)
-    FreezeEntityPosition(PlayerPedPreview, true)
-    SetEntityVisible(PlayerPedPreview, false, false)
-    NetworkSetEntityInvisibleToNetwork(PlayerPedPreview, false)
-    Wait(200)
-    SetPedAsNoLongerNeeded(PlayerPedPreview)
-    GivePedToPauseMenu(PlayerPedPreview, 2)
-    SetPauseMenuPedLighting(true)
-    SetPauseMenuPedSleepState(true)
-    TriggerServerEvent('gs-scoreboard:requestUserData', tonumber(data.playerID))
+    if Config.showPlayerPed then
+        local playerID = data.playerID
+        DeleteEntity(PlayerPedPreview)
+        Citizen.Wait(100)
+        local playerTargetID = GetPlayerPed(GetPlayerFromServerId(playerID))
+        PlayerPedPreview = ClonePed(playerTargetID, GetEntityHeading(playerTargetID), true, false)
+        local x,y,z = table.unpack(GetEntityCoords(PlayerPedPreview))
+        SetEntityCoords(PlayerPedPreview, x,y,z-10)
+        FreezeEntityPosition(PlayerPedPreview, true)
+        SetEntityVisible(PlayerPedPreview, false, false)
+        NetworkSetEntityInvisibleToNetwork(PlayerPedPreview, false)
+        Wait(200)
+        SetPedAsNoLongerNeeded(PlayerPedPreview)
+        GivePedToPauseMenu(PlayerPedPreview, 2)
+        SetPauseMenuPedLighting(true)
+        SetPauseMenuPedSleepState(true)
+        TriggerServerEvent('gs-scoreboard:requestUserData', tonumber(data.playerID))
+    end
 end)
 
 RegisterNetEvent("gs-scoreboard:receiveRequestedData")

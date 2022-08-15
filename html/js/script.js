@@ -1,3 +1,6 @@
+var config = {}
+var isScoreboardOpen = false
+
 function sortTableLetters(n) {
     var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
     table = document.getElementById("usersTable");
@@ -59,11 +62,9 @@ function sortTableNumbers(n) {
 }
 
 function msToTime(duration) {
-  var milliseconds = Math.floor((duration % 1000) / 100),
-    seconds = Math.floor((duration / 1000) % 60),
+  var seconds = Math.floor((duration / 1000) % 60),
     minutes = Math.floor((duration / (1000 * 60)) % 60),
     hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
-
   if (minutes == 0 && hours == 0){
     return seconds + " Seconds ";
   }
@@ -74,21 +75,14 @@ function msToTime(duration) {
 }
 
 $(document).ready(function() {
-    function updateTableDimensions() {
-      try {
-            document.getElementById("th1").style.width = "45px"
-            document.getElementById("th2").style.width = document.getElementById("td2").clientWidth.toString() + "px"
-            document.getElementById("th3").style.width = document.getElementById("td3").clientWidth.toString() + "px"
-            document.getElementById("th4").style.width = document.getElementById("td4").clientWidth.toString() + "px"
-      } 
-      catch (error) {}
-    }
-    setInterval(updateTableDimensions, 100)
-
-    var isScoreboardOpen = false
-
     window.addEventListener('message', (event) => {
         let data = event.data
+        if(data.action == "getConfig") {
+            config = data.config
+            loadKeyBinds()
+            toggleKeyBinds()
+            togglePlayerInfo()
+        }
         if (data.action == 'show' && !isScoreboardOpen) {
             isScoreboardOpen = true
             $("#main").fadeIn(500);
@@ -149,6 +143,31 @@ $(document).ready(function() {
         }
     };
 
+    function loadKeyBinds(){
+        var jsonConfig = JSON.parse(config)
+        for (let i = 0; i < jsonConfig["keyBinds"].length; i++) {
+            let key = JSON.stringify(jsonConfig["keyBinds"][i]["key"])
+            let description = JSON.stringify(jsonConfig["keyBinds"][i]["description"])
+            const keyBind = document.createElement('span')
+            keyBind.id = key+"-"+i.toString()
+            keyBind.className = "keyboardKeybind"
+            keyBind.innerHTML = (description + " <div class='keyButton'>"+key.toUpperCase()+"</div><br>").replaceAll('"',"")
+            document.getElementById("keyboardKeybinds").appendChild(keyBind)
+        }
+    }
+
+    function toggleKeyBinds(){
+        var jsonConfig = JSON.parse(config)
+        var toggleKeyBinds = JSON.stringify(jsonConfig["showKeyBinds"])
+        if (toggleKeyBinds == "false") $(".keybindContainer").hide()
+    }
+
+    function togglePlayerInfo(){
+        var jsonConfig = JSON.parse(config)
+        var togglePlayerInfo = JSON.stringify(jsonConfig["showPlayerInfo"])
+        if (togglePlayerInfo == "false") $(".playerInfoContainer").hide()
+    }
+
     function clickedPlayerName(source,name) {
         fetch(`https://${GetParentResourceName()}/showPlayerPed`, {
             method: 'POST',
@@ -161,5 +180,16 @@ $(document).ready(function() {
             })
         });
     }
+
+    function updateTableDimensions() {
+        try {
+              document.getElementById("th1").style.width = "45px"
+              document.getElementById("th2").style.width = document.getElementById("td2").clientWidth.toString() + "px"
+              document.getElementById("th3").style.width = document.getElementById("td3").clientWidth.toString() + "px"
+              document.getElementById("th4").style.width = document.getElementById("td4").clientWidth.toString() + "px"
+        } 
+        catch (error) {}
+      }
+      setInterval(updateTableDimensions, 50)
 
 });
