@@ -5,6 +5,7 @@ Config.screenBlurAnimationDuration = 500
 Config.showKeyBinds = true
 Config.showPlayerInfo = true
 Config.showPlayerPed = true
+Config.showIllegalActivites = true
 
 Config.keyBinds = {
     {

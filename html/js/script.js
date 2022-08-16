@@ -83,6 +83,7 @@ $(document).ready(function() {
             loadKeyBinds()
             toggleKeyBinds()
             togglePlayerInfo()
+            toggleIllegalActivitesInfo()
         }
         if (data.action == 'show' && !isScoreboardOpen) {
             isScoreboardOpen = true
@@ -209,6 +210,12 @@ $(document).ready(function() {
         var jsonConfig = JSON.parse(config)
         var togglePlayerInfo = JSON.stringify(jsonConfig["showPlayerInfo"])
         if (togglePlayerInfo == "false") $(".playerInfoContainer").hide()
+    }
+
+    function toggleIllegalActivitesInfo(){
+        var jsonConfig = JSON.parse(config)
+        var toggleIllegalActivitesInfo = JSON.stringify(jsonConfig["showIllegalActivites"])
+        if (toggleIllegalActivitesInfo == "false") $(".illegalActivitesContainer").hide()
     }
 
     function clickedPlayerName(source,name) {
