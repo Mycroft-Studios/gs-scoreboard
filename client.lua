@@ -70,6 +70,13 @@ RegisterNUICallback('closeScoreboard', function()
     ExecuteCommand('closescoreboard')
 end)
 
+RegisterNUICallback('getGroupOnline', function(data,cb)
+    local groupName = data.groupName
+    ESX.TriggerServerCallback('gs-scoreboard:getGroupOnlineAmount', function(groupOnlineAmount)
+        cb(groupOnlineAmount)
+    end, groupName)
+end)
+
 RegisterNetEvent("gs-scoreboard:addUserToScoreboard")
 AddEventHandler(
     "gs-scoreboard:addUserToScoreboard",

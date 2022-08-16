@@ -1,4 +1,5 @@
 var config = {}
+var onlinePlayers = 0
 var isScoreboardOpen = false
 
 function sortTableLetters(n) {
@@ -89,9 +90,11 @@ $(document).ready(function() {
         }
         if (data.action == 'hide' && isScoreboardOpen) {
             isScoreboardOpen = false
+            $("#illegalActivites").empty()
             $("#main").fadeOut(500);
         }
         if (data.action == "updateScoreboard") {
+            onlinePlayers = data.onlinePlayers
             $('#onlinePlayers').html(data.onlinePlayers + ' <i class="fa-solid fa-circle-dot  noSelect" style="color: #7CFC00;"></i>')
             $('#onlineStaff').html(data.onlineStaff + ' <i class="fa-solid fa-clipboard-user noSelect" style="color: #5c5c5c;"></i>')
             $('#onlinePolice').html(data.onlinePolice + ' <i class="fa-solid fa-handcuffs noSelect" style="color: #3B9AE1;"></i>')
@@ -132,6 +135,7 @@ $(document).ready(function() {
             $("#roleplayName").html(data.roleplayName+' <i class="fa-solid fa-id-card"></i>')
             $("#playTime").html(msToTime(data.timePlayed)+' <i class="fa-solid fa-clock"></i>')
             $("#playerID").html(data.playerID+' <i class="fa-solid fa-server"></i>')
+            loadIllegalActivites()
         }
     })
 
@@ -153,6 +157,45 @@ $(document).ready(function() {
             keyBind.className = "keyboardKeybind"
             keyBind.innerHTML = (description + " <div class='keyButton'>"+key.toUpperCase()+"</div><br>").replaceAll('"',"")
             document.getElementById("keyboardKeybinds").appendChild(keyBind)
+        }
+    }
+
+    function loadIllegalActivites(){
+        var jsonConfig = JSON.parse(config)
+        for (let i = 0; i < jsonConfig["illegalActivites"].length; i++) {
+            let id = JSON.stringify(jsonConfig["illegalActivites"][i]["id"]).replaceAll('"',"")
+            let title = JSON.stringify(jsonConfig["illegalActivites"][i]["title"]).replaceAll('"',"")
+            let description = JSON.stringify(jsonConfig["illegalActivites"][i]["description"]).replaceAll('"',"")
+            let groupName = JSON.stringify(jsonConfig["illegalActivites"][i]["group_name"]).replaceAll('"',"")
+            let minimumPlayerOnline = parseInt(JSON.stringify(jsonConfig["illegalActivites"][i]["minimum_player_online"]).replaceAll('"',""))
+            let minimumGroupOnline = parseInt(JSON.stringify(jsonConfig["illegalActivites"][i]["minimum_group_online"]).replaceAll('"',""))
+            fetch(`https://${GetParentResourceName()}/getGroupOnline`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json; charset=UTF-8',
+                },
+                body: JSON.stringify({
+                    groupName: groupName
+                })
+            }).then(resp => resp.json()).then(resp => callBackCompleted(resp));
+
+            function callBackCompleted(groupOnlineAmount){
+                const illegalActivity = document.createElement('span')
+                const noIcon = ' <i class="fa-solid fa-circle-xmark" style="color: #f34943;"></i>'
+                const yesIcon = ' <i class="fa-solid fa-circle-check" style="color: #4ff343;"></i>'
+                illegalActivity.id = id+"-"+i.toString()
+                illegalActivity.className = "illegalActivity"
+                illegalActivity.setAttribute("data-tooltip",description)
+                illegalActivity.setAttribute("data-tooltip-position","left")
+                if (parseInt(groupOnlineAmount) >= parseInt(minimumGroupOnline) && parseInt(onlinePlayers) >= parseInt(minimumPlayerOnline)) {
+                    illegalActivity.innerHTML = title+yesIcon
+                }
+                else{
+                    illegalActivity.innerHTML = title+noIcon
+                }
+                document.getElementById("illegalActivites").appendChild(illegalActivity)
+                document.getElementById("illegalActivites").appendChild(document.createElement('br'))
+            }
         }
     }
 
@@ -189,7 +232,8 @@ $(document).ready(function() {
               document.getElementById("th4").style.width = document.getElementById("td4").clientWidth.toString() + "px"
         } 
         catch (error) {}
-      }
-      setInterval(updateTableDimensions, 50)
+    }
+
+    setInterval(updateTableDimensions, 50)
 
 });

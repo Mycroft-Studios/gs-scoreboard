@@ -63,8 +63,10 @@ AddEventHandler(
     'gs-scoreboard:sendRequestedData',  
     function(to, data)
         local xPlayer = ESX.GetPlayerFromId(source)
-        data.roleplayName = xPlayer.getName()
-        TriggerClientEvent("gs-scoreboard:receiveRequestedData", to, source, data)
+        if xPlayer ~= nil then
+            data.roleplayName = xPlayer.getName()
+            TriggerClientEvent("gs-scoreboard:receiveRequestedData", to, source, data)
+        end
     end
 )
 
@@ -118,3 +120,8 @@ function getOnlineMechanics()
     local xPlayers = ESX.GetExtendedPlayers('group','mechanic')
     return #xPlayers
 end
+
+ESX.RegisterServerCallback('gs-scoreboard:getGroupOnlineAmount', function(source, cb, groupName)
+    local groupOnlineAmount = #ESX.GetExtendedPlayers('group',groupName)
+    cb(groupOnlineAmount)
+end)
