@@ -87,6 +87,7 @@ $(document).ready(function() {
         }
         if (data.action == 'show' && !isScoreboardOpen) {
             isScoreboardOpen = true
+            loadIllegalActivites()
             $("#main").fadeIn(500);
         }
         if (data.action == 'hide' && isScoreboardOpen) {
@@ -136,7 +137,6 @@ $(document).ready(function() {
             $("#roleplayName").html(data.roleplayName+' <i class="fa-solid fa-id-card"></i>')
             $("#playTime").html(msToTime(data.timePlayed)+' <i class="fa-solid fa-clock"></i>')
             $("#playerID").html(data.playerID+' <i class="fa-solid fa-server"></i>')
-            loadIllegalActivites()
         }
     })
 
