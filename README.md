@@ -26,6 +26,10 @@ Make **pull-requests** if you want improve this script!
     - Added configuration for keybinds, now you can add as many keybinds as you want easily by adding them in the config.lua
     - Changed how keybind keys show, now they are pure CSS instead of an ugly image.
 
+**1.2.1**
+
+    - Added a section like player info and keybinds that contains info about allowed illegal activities with a title, indicative icon and a tooltip description!
+    - The new illegal activities section can also be toggled in the config file!
 
 # 
 **LICENSE**
