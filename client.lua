@@ -1,10 +1,9 @@
-
 local isScoreboardOpen = false
 local requestedData
 
 Citizen.CreateThread(function() 
     while true do
-        Citizen.Wait(2500)
+        Citizen.Wait(Config.updateScoreboardInterval)
         TriggerServerEvent("gs-scoreboard:updateValues")
     end
 end)
@@ -70,13 +69,6 @@ RegisterNUICallback('closeScoreboard', function()
     ExecuteCommand('closescoreboard')
 end)
 
-RegisterNUICallback('getGroupOnline', function(data,cb)
-    local groupName = data.groupName
-    ESX.TriggerServerCallback('gs-scoreboard:getGroupOnlineAmount', function(groupOnlineAmount)
-        cb(groupOnlineAmount)
-    end, groupName)
-end)
-
 RegisterNetEvent("gs-scoreboard:addUserToScoreboard")
 AddEventHandler(
     "gs-scoreboard:addUserToScoreboard",
@@ -99,6 +91,16 @@ AddEventHandler("gs-scoreboard:sendConfigToNUI",
         SendNUIMessage({
             action = "getConfig",
             config = json.encode(Config),
+        })
+    end
+)
+
+RegisterNetEvent("gs-scoreboard:sendIllegalActivity")
+AddEventHandler("gs-scoreboard:sendIllegalActivity",
+    function(data)
+        SendNUIMessage({
+            action = "addActivity",
+            activity = data,
         })
     end
 )

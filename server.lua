@@ -21,6 +21,8 @@ function RefreshScoreboard()
         local playerJob = xPlayer.job.label
         local playerGroup = xPlayer.getGroup()
         TriggerClientEvent("gs-scoreboard:addUserToScoreboard", -1, playerID, playerName, playerJob, playerGroup)
+        TriggerClientEvent("gs-scoreboard:sendConfigToNUI", -1)
+        getIllegalActivitesData()
     end
 end
 
@@ -46,7 +48,7 @@ AddEventHandler(
         local onlineEMS = getOnlineEMS()
         local onlineTaxi = getOnlineTaxi()
         local onlineMechanics = getOnlineMechanics()
-        TriggerClientEvent("gs-scoreboard:setValues", -1, onlinePlayers, onlineStaff, onlinePolice, onlineEMS, onlineTaxi, onlineMechanics)
+        TriggerClientEvent("gs-scoreboard:setValues", -1, onlinePlayers, onlineStaff, onlinePolice, onlineEMS, onlineTaxi, onlineMechanics, illegalActivites)
     end
 )
 
@@ -121,7 +123,12 @@ function getOnlineMechanics()
     return #xPlayers
 end
 
-ESX.RegisterServerCallback('gs-scoreboard:getGroupOnlineAmount', function(source, cb, groupName)
-    local groupOnlineAmount = #ESX.GetExtendedPlayers('group',groupName)
-    cb(groupOnlineAmount)
-end)
+function getIllegalActivitesData()
+    local data = Config.illegalActivites
+    for i = 1,#data do
+        data[i]["online_players"] = getOnlinePlayers()
+        data[i]["online_group"] = #ESX.GetExtendedPlayers('group',data[i]["group_name"])
+        TriggerClientEvent("gs-scoreboard:sendIllegalActivity",-1,data[i])
+    end
+    return data
+end

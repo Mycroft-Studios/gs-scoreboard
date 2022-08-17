@@ -1,5 +1,6 @@
 Config = {}
 
+Config.updateScoreboardInterval = 5000
 Config.screenBlur = true
 Config.screenBlurAnimationDuration = 500
 Config.showKeyBinds = true

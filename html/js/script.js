@@ -80,19 +80,17 @@ $(document).ready(function() {
         let data = event.data
         if(data.action == "getConfig") {
             config = data.config
-            loadKeyBinds()
             toggleKeyBinds()
             togglePlayerInfo()
             toggleIllegalActivitesInfo()
         }
         if (data.action == 'show' && !isScoreboardOpen) {
             isScoreboardOpen = true
-            loadIllegalActivites()
             $("#main").fadeIn(500);
+            loadKeyBinds()
         }
         if (data.action == 'hide' && isScoreboardOpen) {
             isScoreboardOpen = false
-            $("#illegalActivites").empty()
             $("#main").fadeOut(500);
         }
         if (data.action == "updateScoreboard") {
@@ -131,12 +129,16 @@ $(document).ready(function() {
         }
         if (data.action == "refreshScoreboard") {
             $("#usersTable").empty()
+            $("#illegalActivites").empty()
         }
         if (data.action == "playerInfoUpdate") {
             $("#playerName").html(data.playerName+' <i class="fa-solid fa-user-tag"></i>')
             $("#roleplayName").html(data.roleplayName+' <i class="fa-solid fa-id-card"></i>')
             $("#playTime").html(msToTime(data.timePlayed)+' <i class="fa-solid fa-clock"></i>')
             $("#playerID").html(data.playerID+' <i class="fa-solid fa-server"></i>')
+        }
+        if (data.action == "addActivity") {
+            loadIllegalActivy(data.activity)
         }
     })
 
@@ -149,10 +151,11 @@ $(document).ready(function() {
     };
 
     function loadKeyBinds(){
-        var jsonConfig = JSON.parse(config)
-        for (let i = 0; i < jsonConfig["keyBinds"].length; i++) {
-            let key = JSON.stringify(jsonConfig["keyBinds"][i]["key"])
-            let description = JSON.stringify(jsonConfig["keyBinds"][i]["description"])
+        $("#keyboardKeybinds").empty()
+        var jsonData = JSON.parse(config)
+        for (let i = 0; i < jsonData["keyBinds"].length; i++) {
+            let key = JSON.stringify(jsonData["keyBinds"][i]["key"])
+            let description = JSON.stringify(jsonData["keyBinds"][i]["description"])
             const keyBind = document.createElement('span')
             keyBind.id = key+"-"+i.toString()
             keyBind.className = "keyboardKeybind"
@@ -161,43 +164,29 @@ $(document).ready(function() {
         }
     }
 
-    function loadIllegalActivites(){
-        var jsonConfig = JSON.parse(config)
-        for (let i = 0; i < jsonConfig["illegalActivites"].length; i++) {
-            let id = JSON.stringify(jsonConfig["illegalActivites"][i]["id"]).replaceAll('"',"")
-            let title = JSON.stringify(jsonConfig["illegalActivites"][i]["title"]).replaceAll('"',"")
-            let description = JSON.stringify(jsonConfig["illegalActivites"][i]["description"]).replaceAll('"',"")
-            let groupName = JSON.stringify(jsonConfig["illegalActivites"][i]["group_name"]).replaceAll('"',"")
-            let minimumPlayerOnline = parseInt(JSON.stringify(jsonConfig["illegalActivites"][i]["minimum_player_online"]).replaceAll('"',""))
-            let minimumGroupOnline = parseInt(JSON.stringify(jsonConfig["illegalActivites"][i]["minimum_group_online"]).replaceAll('"',""))
-            fetch(`https://${GetParentResourceName()}/getGroupOnline`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json; charset=UTF-8',
-                },
-                body: JSON.stringify({
-                    groupName: groupName
-                })
-            }).then(resp => resp.json()).then(resp => callBackCompleted(resp));
-
-            function callBackCompleted(groupOnlineAmount){
-                const illegalActivity = document.createElement('span')
-                const noIcon = ' <i class="fa-solid fa-circle-xmark" style="color: #f34943;"></i>'
-                const yesIcon = ' <i class="fa-solid fa-circle-check" style="color: #4ff343;"></i>'
-                illegalActivity.id = id+"-"+i.toString()
-                illegalActivity.className = "illegalActivity"
-                illegalActivity.setAttribute("data-tooltip",description)
-                illegalActivity.setAttribute("data-tooltip-position","left")
-                if (parseInt(groupOnlineAmount) >= parseInt(minimumGroupOnline) && parseInt(onlinePlayers) >= parseInt(minimumPlayerOnline)) {
-                    illegalActivity.innerHTML = title+yesIcon
-                }
-                else{
-                    illegalActivity.innerHTML = title+noIcon
-                }
-                document.getElementById("illegalActivites").appendChild(illegalActivity)
-                document.getElementById("illegalActivites").appendChild(document.createElement('br'))
-            }
+    function loadIllegalActivy(data){
+        let id = data.id
+        let title = data.title
+        let description = data.description
+        let minimumPlayersOnline = data.minimumPlayersOnline
+        let minimumGroupOnline = data.minimumGroupOnline
+        let onlinePlayers = data.onlinePlayers
+        let onlineGroup = data.onlineGroup
+        let illegalActivity = document.createElement('span')
+        let noIcon = ' <i class="fa-solid fa-circle-xmark" style="color: #f34943;"></i>'
+        let yesIcon = ' <i class="fa-solid fa-circle-check" style="color: #4ff343;"></i>'
+        illegalActivity.id = id+"-"+parseInt(Math.random()*10000).toString()
+        illegalActivity.className = "illegalActivity"
+        illegalActivity.setAttribute("data-tooltip",description)
+        illegalActivity.setAttribute("data-tooltip-position","left")
+        if (parseInt(onlineGroup) >= parseInt(minimumGroupOnline) && parseInt(onlinePlayers) >= parseInt(minimumPlayersOnline)) {
+            illegalActivity.innerHTML = title+yesIcon
         }
+        else{
+            illegalActivity.innerHTML = title+noIcon
+        }
+        document.getElementById("illegalActivites").appendChild(illegalActivity)
+        document.getElementById("illegalActivites").appendChild(document.createElement('br'))
     }
 
     function toggleKeyBinds(){
