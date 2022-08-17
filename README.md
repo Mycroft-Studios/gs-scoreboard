@@ -12,6 +12,12 @@ Make **pull-requests** if you want improve this script!
 
 #
 
+**Contributors**
+
+**-** IgnoranceIsBliss#5250 - Made further improvements to the script and made it compatible with older ESX versions.
+
+#
+
 **Change Logs:**
 
 **1.0.1**
