@@ -126,8 +126,8 @@ end
 function getIllegalActivitesData()
     local data = Config.illegalActivites
     for i = 1,#data do
-        data[i]["online_players"] = getOnlinePlayers()
-        data[i]["online_group"] = #ESX.GetExtendedPlayers('group',data[i]["group_name"])
+        data[i]["onlinePlayers"] = getOnlinePlayers()
+        data[i]["onlineGroup"] = #ESX.GetExtendedPlayers('group',data[i]["group_name"])
         TriggerClientEvent("gs-scoreboard:sendIllegalActivity",-1,data[i])
     end
     return data

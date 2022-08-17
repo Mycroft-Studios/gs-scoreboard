@@ -179,6 +179,7 @@ $(document).ready(function() {
         illegalActivity.className = "illegalActivity"
         illegalActivity.setAttribute("data-tooltip",description)
         illegalActivity.setAttribute("data-tooltip-position","left")
+        console.log(onlinePlayers,onlineGroup,minimumGroupOnline,minimumPlayersOnline,id,title)
         if (parseInt(onlineGroup) >= parseInt(minimumGroupOnline) && parseInt(onlinePlayers) >= parseInt(minimumPlayersOnline)) {
             illegalActivity.innerHTML = title+yesIcon
         }
