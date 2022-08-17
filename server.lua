@@ -1,3 +1,8 @@
+if Config.OldESX == true then
+    ESX = nil
+    TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+end
+
 function Sanitize(str)
     local replacements = {
         ['&' ] = '&amp;',
@@ -44,10 +49,10 @@ AddEventHandler(
     function()
         local onlinePlayers = getOnlinePlayers()
         local onlineStaff = getOnlineStaff()
-        local onlinePolice = getOnlinePolice()
-        local onlineEMS = getOnlineEMS()
-        local onlineTaxi = getOnlineTaxi()
-        local onlineMechanics = getOnlineMechanics()
+        local onlinePolice = getOnlineByType(Config.policeCounterType,Config.policeCounterIdentifier)
+        local onlineEMS = getOnlineByType(Config.emsCounterType,Config.emsCounterIdentifier)
+        local onlineTaxi = getOnlineByType(Config.taxiCounterType,Config.taxiCounterIdentifier)
+        local onlineMechanics = getOnlineByType(Config.mechanicCounterType,Config.mechanicCounterIdentifier)
         TriggerClientEvent("gs-scoreboard:setValues", -1, onlinePlayers, onlineStaff, onlinePolice, onlineEMS, onlineTaxi, onlineMechanics, illegalActivites)
     end
 )
@@ -103,24 +108,20 @@ function getOnlineStaff()
     return (#xPlayersTotal - #xPlayersUsers)
 end
 
-function getOnlinePolice()
-    local xPlayers = ESX.GetExtendedPlayers('group','police')
-    return #xPlayers
-end
+function getOnlineByType(type, value)
+    local xPlayers = ESX.GetPlayers()
+    local counter = 0
 
-function getOnlineEMS()
-    local xPlayers = ESX.GetExtendedPlayers('group','ems')
-    return #xPlayers
-end
+    for i=1, #xPlayers, 1 do
+        local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
+        if type == "group" and xPlayer.getGroup() == value then
+            counter = counter + 1
+        elseif type == "job" and xPlayer.getJob().name == value then
+            counter = counter + 1
+        end
+    end
 
-function getOnlineTaxi()
-    local xPlayers = ESX.GetExtendedPlayers('group','taxi')
-    return #xPlayers
-end
-
-function getOnlineMechanics()
-    local xPlayers = ESX.GetExtendedPlayers('group','mechanic')
-    return #xPlayers
+    return counter
 end
 
 function getIllegalActivitesData()

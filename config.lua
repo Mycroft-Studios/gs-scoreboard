@@ -7,6 +7,19 @@ Config.showKeyBinds = true
 Config.showPlayerInfo = true
 Config.showPlayerPed = true
 Config.showIllegalActivites = true
+Config.OldESX = true
+
+Config.policeCounterType = "job"
+Config.policeCounterIdentifier = "police"
+
+Config.emsCounterType = "job"
+Config.emsCounterIdentifier = "ambulance"
+
+Config.taxiCounterType = "job"
+Config.taxiCounterIdentifier = "taxi"
+
+Config.mechanicCounterType = "job"
+Config.mechanicCounterIdentifier = "mechanic"
 
 Config.keyBinds = {
     {

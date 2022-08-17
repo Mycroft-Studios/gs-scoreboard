@@ -9,7 +9,7 @@ ui_page "html/main.html"
 lua54 'yes'
 
 shared_scripts {
-    '@es_extended/imports.lua',
+    '@es_extended/imports.lua', -- If Using V1 Final Or V1.2 Remove This Line
     'config.lua'
 }
 

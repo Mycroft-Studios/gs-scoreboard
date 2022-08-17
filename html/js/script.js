@@ -222,7 +222,7 @@ $(document).ready(function() {
 
     function updateTableDimensions() {
         try {
-              document.getElementById("th1").style.width = "45px"
+              document.getElementById("th1").style.width = "50px"
               document.getElementById("th2").style.width = document.getElementById("td2").clientWidth.toString() + "px"
               document.getElementById("th3").style.width = document.getElementById("td3").clientWidth.toString() + "px"
               document.getElementById("th4").style.width = document.getElementById("td4").clientWidth.toString() + "px"
