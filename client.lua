@@ -2,6 +2,19 @@ local isScoreboardOpen = false
 local requestedData
 
 Citizen.CreateThread(function() 
+    ESX = nil
+
+    while ESX == nil do
+        TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+        Citizen.Wait(0)
+    end
+
+    while ESX.GetPlayerData().job == nil do
+        Citizen.Wait(10)
+    end
+
+    ESX.PlayerData = ESX.GetPlayerData()
+
     while true do
         Citizen.Wait(Config.updateScoreboardInterval)
         TriggerServerEvent("gs-scoreboard:updateValues")
