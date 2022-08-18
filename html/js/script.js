@@ -248,7 +248,9 @@ $(document).ready(function() {
     })
 
     document.onkeyup = function(data) {
-        if ((GTAkeyBind == GTAcontrolKeys[capitalizeFirstChar(data.key)]) && isScoreboardOpen) {
+        var keyPressed = capitalizeFirstChar(data.key)
+        if (data.location == 3) keyPressed = "Num"+keyPressed
+        if ((GTAkeyBind == GTAcontrolKeys[keyPressed]) && isScoreboardOpen) {
             $.post(`https://${GetParentResourceName()}/closeScoreboard`, JSON.stringify({}))
             $("#main").stop();
             $("#main").stop();
