@@ -41,7 +41,7 @@ end)
 
 RegisterCommand("refreshscoreboard", function()
     RefreshScoreboard()
-end, false)
+end, true)
 
 RegisterServerEvent("gs-scoreboard:updateValues")
 AddEventHandler(
