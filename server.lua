@@ -20,6 +20,7 @@ end
 function RefreshScoreboard()
     local xPlayers = ESX.GetExtendedPlayers()
     TriggerClientEvent("gs-scoreboard:refrehScoreboard", -1)
+    getIllegalActivitesData()
     for _, xPlayer in pairs(xPlayers) do
         local playerID = xPlayer.source
         local playerName = Sanitize(xPlayer.getName())
@@ -27,7 +28,6 @@ function RefreshScoreboard()
         local playerGroup = xPlayer.getGroup()
         TriggerClientEvent("gs-scoreboard:addUserToScoreboard", -1, playerID, playerName, playerJob, playerGroup)
         TriggerClientEvent("gs-scoreboard:sendConfigToNUI", -1)
-        getIllegalActivitesData()
     end
 end
 
