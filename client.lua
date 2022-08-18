@@ -49,7 +49,8 @@ RegisterCommand('togglescoreboard', function()
             createPedScreen(PlayerPedId())
         end
         SendNUIMessage({
-            action = "show"
+            action = "show",
+            keyBindValue = tostring(GetControlInstructionalButton(0, 0x3635f532 | 0x80000000, 1)),
         })
         SetNuiFocus(true,true)
         if Config.screenBlur then
@@ -62,7 +63,8 @@ RegisterCommand('togglescoreboard', function()
             SetFrontendActive(false)
         end
         SendNUIMessage({
-            action = "hide"
+            action = "hide",
+            keyBindValue = tostring(GetControlInstructionalButton(0, 0x3635f532 | 0x80000000, 1)),
         })
         SetNuiFocus(false,false)
         isScoreboardOpen = false
