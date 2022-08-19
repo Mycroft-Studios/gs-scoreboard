@@ -59,7 +59,7 @@ AddEventHandler(
 
 RegisterNetEvent('gs-scoreboard:requestUserData')
 AddEventHandler(
-    'gs-scoreboard:requestUserData',  
+    'gs-scoreboard:requestUserData',
     function(target)
         TriggerClientEvent("gs-scoreboard:retrieveUserData", tonumber(target), source, tonumber(target))
     end
@@ -80,6 +80,7 @@ AddEventHandler(
 AddEventHandler(
     'esx:playerLoaded',  
     function()
+        Citizen.Wait(500)
         RefreshScoreboard()
     end
 )
@@ -87,14 +88,10 @@ AddEventHandler(
 AddEventHandler(
     'playerDropped', 
     function()
+        Citizen.Wait(500)
         RefreshScoreboard()
     end
 )
-
-AddEventHandler('playerDropped', function (reason)
-    Citizen.Wait(500)
-    RefreshScoreboard()
-end)
   
 
 function getOnlinePlayers()
