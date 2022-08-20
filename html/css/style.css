@@ -110,6 +110,18 @@ tr {
     left: 2.25vw;
 }
 
+.tooFarMessage {
+    display: none;
+    position: absolute;
+    text-align: center;
+    width: 12.5vw;
+    font-size: 0.95vw;
+    color: white;
+    top: 26vw;
+    right: 27vw;
+    filter: drop-shadow(0 0 2.5vw black);
+}
+
 .onlinePlayers {
     font-size: 1.35vw;
     color: #a6a4a4;

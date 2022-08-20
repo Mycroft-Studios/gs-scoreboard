@@ -237,10 +237,14 @@ $(document).ready(function() {
             $("#illegalActivites").empty()
         }
         if (data.action == "playerInfoUpdate") {
+            $("#tooFarMessage").hide()
             $("#playerName").html(data.playerName+' <i class="fa-solid fa-user-tag"></i>')
             $("#roleplayName").html(data.roleplayName+' <i class="fa-solid fa-id-card"></i>')
             $("#playTime").html(msToTime(data.timePlayed)+' <i class="fa-solid fa-clock"></i>')
             $("#playerID").html(data.playerID+' <i class="fa-solid fa-server"></i>')
+            if (data.tooFar == true) {
+                $("#tooFarMessage").fadeIn(500)
+            }
         }
         if (data.action == "addActivity") {
             loadIllegalActivy(data.activity)

@@ -147,10 +147,10 @@ AddEventHandler(
 )
 
 RegisterNUICallback('showPlayerPed', function(data)
+    TriggerServerEvent('gs-scoreboard:requestUserData', tonumber(data.playerID))
     if Config.showPlayerPed then
         local playerID = data.playerID
         DeleteEntity(PlayerPedPreview)
-        Citizen.Wait(100)
         local playerTargetID = GetPlayerPed(GetPlayerFromServerId(playerID))
         PlayerPedPreview = ClonePed(playerTargetID, GetEntityHeading(playerTargetID), true, false)
         local x,y,z = table.unpack(GetEntityCoords(PlayerPedPreview))
@@ -158,12 +158,10 @@ RegisterNUICallback('showPlayerPed', function(data)
         FreezeEntityPosition(PlayerPedPreview, true)
         SetEntityVisible(PlayerPedPreview, false, false)
         NetworkSetEntityInvisibleToNetwork(PlayerPedPreview, false)
-        Wait(200)
         SetPedAsNoLongerNeeded(PlayerPedPreview)
         GivePedToPauseMenu(PlayerPedPreview, 2)
         SetPauseMenuPedLighting(true)
         SetPauseMenuPedSleepState(true)
-        TriggerServerEvent('gs-scoreboard:requestUserData', tonumber(data.playerID))
     end
 end)
 
@@ -172,6 +170,11 @@ AddEventHandler(
     "gs-scoreboard:receiveRequestedData",
     function(from, data)
         requestedData = data
+        local tooFar = false
+        local playerCoords = GetEntityCoords(PlayerPedId())
+        if #(playerCoords - data.playerCoords) > 300 then
+            tooFar = true
+        end
         SendNUIMessage(
         {
             action="playerInfoUpdate",
@@ -179,8 +182,8 @@ AddEventHandler(
             playerID = requestedData.playerID,
             timePlayed = requestedData.timePlayed,
             roleplayName = requestedData.roleplayName,
-        }
-    )
+            tooFar = tooFar,
+        })
     end
 )
 
@@ -191,6 +194,7 @@ AddEventHandler(
         local data = {}
         data.playerName = GetPlayerName(PlayerId())
         data.playerID = to
+        data.playerCoords = GetEntityCoords(PlayerPedId())
         local retVal, timePlayed = StatGetInt('mp0_total_playing_time')
         data.timePlayed = timePlayed
         TriggerServerEvent('gs-scoreboard:sendRequestedData', from, data)
