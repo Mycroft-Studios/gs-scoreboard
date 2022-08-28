@@ -7,7 +7,7 @@ Config.showKeyBinds = true
 Config.showPlayerInfo = true
 Config.showPlayerPed = true
 Config.showIllegalActivites = true
-Config.OldESX = true
+Config.OldESX = false
 
 Config.policeCounterType = "job"
 Config.policeCounterIdentifier = "police"

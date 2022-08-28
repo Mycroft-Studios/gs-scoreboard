@@ -1,4 +1,4 @@
-if Config.OldESX == true then
+if Config.OldESX then
     ESX = nil
     TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 end

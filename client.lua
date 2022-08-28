@@ -1,22 +1,21 @@
 local isScoreboardOpen = false
 local requestedData
 
-Citizen.CreateThread(function() 
-    ESX = nil
+CreateThread(function()
+    if Config.OldESX then 
+        while ESX == nil do
+            TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+            Wait(0)
+        end
 
-    while ESX == nil do
-        TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-        Citizen.Wait(0)
+        while ESX.GetPlayerData().job == nil do
+            Wait(10)
+        end
+
+        ESX.PlayerData = ESX.GetPlayerData()
     end
-
-    while ESX.GetPlayerData().job == nil do
-        Citizen.Wait(10)
-    end
-
-    ESX.PlayerData = ESX.GetPlayerData()
-
     while true do
-        Citizen.Wait(Config.updateScoreboardInterval)
+        Wait(Config.updateScoreboardInterval)
         TriggerServerEvent("gs-scoreboard:updateValues")
     end
 end)
@@ -25,7 +24,7 @@ local PlayerPedPreview
 function createPedScreen(playerID)
     CreateThread(function()
         ActivateFrontendMenu(GetHashKey("FE_MENU_VERSION_JOINING_SCREEN"), true, -1)
-        Citizen.Wait(100)
+        Wait(100)
         N_0x98215325a695e78a(false)
         PlayerPedPreview = ClonePed(playerID, GetEntityHeading(playerID), true, false)
         local x,y,z = table.unpack(GetEntityCoords(PlayerPedPreview))
