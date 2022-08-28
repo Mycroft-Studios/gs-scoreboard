@@ -109,3 +109,14 @@ function getIllegalActivitesData()
     end
     return data
 end
+
+ESX.RegisterServerCallback('gs-scoreboard:Close', function(src, cb)
+   SetPlayerCullingRadius(src, 0.0)
+   cb()
+end)
+
+ESX.RegisterServerCallback('gs-scoreboard:Open', function(src, cb)
+    SetPlayerCullingRadius(src, 50000.0)
+    cb()
+ end)
+ 

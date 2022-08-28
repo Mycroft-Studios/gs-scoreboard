@@ -38,34 +38,38 @@ end
 
 RegisterCommand('togglescoreboard', function()
     if not isScoreboardOpen then
-        TriggerServerEvent('gs-scoreboard:requestUserData')
-        if Config.showPlayerPed then
-            SetFrontendActive(true)
-            createPedScreen(ESX.PlayerData.ped or PlayerPedId())
-        end
-        SendNUIMessage({
-            action = "show",
-            keyBindValue = tostring(GetControlInstructionalButton(0, 0x3635f532 | 0x80000000, 1)),
-        })
-        SetNuiFocus(true,true)
-        if Config.screenBlur then
-            TriggerScreenblurFadeIn(Config.screenBlurAnimationDuration)
-        end
         isScoreboardOpen = true
+        ESX.TriggerServerCallback("gs-scoreboard:Open", function()
+            TriggerServerEvent('gs-scoreboard:requestUserData')
+            if Config.showPlayerPed then
+                SetFrontendActive(true)
+                createPedScreen(ESX.PlayerData.ped or PlayerPedId())
+            end
+            SendNUIMessage({
+                action = "show",
+                keyBindValue = tostring(GetControlInstructionalButton(0, 0x3635f532 | 0x80000000, 1)),
+            })
+            SetNuiFocus(true,true)
+            if Config.screenBlur then
+                TriggerScreenblurFadeIn(Config.screenBlurAnimationDuration)
+            end
+        end)
     else
-        if Config.showPlayerPed then
-            DeleteEntity(PlayerPedPreview)
-            SetFrontendActive(false)
-        end
-        SendNUIMessage({
-            action = "hide",
-            keyBindValue = tostring(GetControlInstructionalButton(0, 0x3635f532 | 0x80000000, 1)),
-        })
-        SetNuiFocus(false,false)
-        isScoreboardOpen = false
-        if Config.screenBlur then
-            TriggerScreenblurFadeOut(Config.screenBlurAnimationDuration)
-        end
+        ESX.TriggerServerCallback("gs-scoreboard:Close", function()
+            if Config.showPlayerPed then
+                DeleteEntity(PlayerPedPreview)
+                SetFrontendActive(false)
+            end
+            SendNUIMessage({
+                action = "hide",
+                keyBindValue = tostring(GetControlInstructionalButton(0, 0x3635f532 | 0x80000000, 1)),
+            })
+            SetNuiFocus(false,false)
+            isScoreboardOpen = false
+            if Config.screenBlur then
+                TriggerScreenblurFadeOut(Config.screenBlurAnimationDuration)
+            end
+        end)
     end
 end, false)
 

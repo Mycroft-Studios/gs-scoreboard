@@ -16,6 +16,7 @@ Make **pull-requests** if you want improve this script!
 
 **-** IgnoranceIsBliss#5250 - Made further improvements to the script and made it compatible with older ESX versions.
 **-** Mycroft#9999 (Vice President Of ESX) - Code Improvements
+
 ## **Change Logs:**
 
 ### **1.0.1**
