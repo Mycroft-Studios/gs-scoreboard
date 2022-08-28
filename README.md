@@ -1,13 +1,13 @@
 # **GS Scoreboard**
 
+![Preview_1](https://cdn.discordapp.com/attachments/1003717873165930606/1013517177011314728/unknown.png)
+**Preview Video:** <https://streamable.com/o4w1ph>
+
 Beautiful and low resource usage scoreboard made for ESX Framework with player ped preview and player info and keyboard binds showcase!
 
 Also you can sort the columns in alphabetical order or in numerical order.
 
 Make **pull-requests** if you want improve this script!
-
-**Preview:**
-<div style="width: 100%; height: 0px; position: relative; padding-bottom: 56.250%;"><iframe src="https://streamable.com/e/o4w1ph" frameborder="0" width="100%" height="100%" allowfullscreen style="width: 100%; height: 100%; position: absolute;"></iframe></div>
 
 **My Discord Server:** <https://discord.gg/XTpGvYeNxg>
 *I suggest joining as I am going to announce there any other new scripts that I am working on!*
