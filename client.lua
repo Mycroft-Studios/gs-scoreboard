@@ -170,10 +170,6 @@ AddEventHandler(
     function(from, data)
         requestedData = data
         local tooFar = false
-        local playerCoords = GetEntityCoords(ESX.PlayerData.ped or PlayerPedId())
-        if #(playerCoords - data.playerCoords) > 300 then
-            tooFar = true
-        end
         SendNUIMessage(
         {
             action="playerInfoUpdate",
